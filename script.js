@@ -2,12 +2,24 @@ const weekGrid = document.getElementById("weekGrid");
 const monthYear = document.getElementById("monthYear");
 const weekLabel = document.getElementById("weekLabel");
 const STORAGE_PREFIX = "weekly-log";
+const WEEK_TITLE_PREFIX = "weekly-log-title";
+const weekTitleEl = document.getElementById("weekTitle");
+
 
 function getStorageKey(date, weekday) {
   const year = date.getFullYear();
   const week = getISOWeekNumber(date);
   return `${STORAGE_PREFIX}-${year}-W${week}-${weekday}`;
 }
+
+
+
+function getWeekTitleKey(date) {
+  const year = date.getFullYear();
+  const week = getISOWeekNumber(date);
+  return `${WEEK_TITLE_PREFIX}-${year}-W${week}`;
+}
+
 
 let currentDate = new Date();
 
@@ -17,6 +29,21 @@ function startOfWeek(date) {
   d.setDate(d.getDate() - day + 1);
   return d;
 }
+
+
+weekTitleEl.addEventListener("input", () => {
+  const start = startOfWeek(currentDate);
+  const key = getWeekTitleKey(start);
+  localStorage.setItem(key, weekTitleEl.textContent.trim());
+});
+
+weekTitleEl.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    e.preventDefault();
+    weekTitleEl.blur();
+  }
+});
+
 
 function renderWeek() {
   weekGrid.innerHTML = "";
@@ -32,6 +59,11 @@ function renderWeek() {
   const weekNumber = getISOWeekNumber(start);
 weekLabel.textContent = `Week ${weekNumber}`;
 
+
+const titleKey = getWeekTitleKey(start);
+const savedTitle = localStorage.getItem(titleKey);
+
+weekTitleEl.textContent = savedTitle || "Week Log";
 
   const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 

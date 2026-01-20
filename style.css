@@ -152,3 +152,14 @@ body {
 .today-btn:active {
   transform: scale(0.96);
 }
+
+.week-title {
+  outline: none;
+  border: none;
+  cursor: text;
+}
+
+.week-title:focus {
+  outline: none;
+  border: none;
+}
