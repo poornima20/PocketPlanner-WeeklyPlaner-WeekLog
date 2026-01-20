@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Week Log</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@600&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+
+  <!-- Lucide -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <h1>Weekly Log</h1>
+    <button id="todayBtn" class="today-btn" aria-label="Go to today">
+  <i data-lucide="calendar-days"></i>
+</button>
+
+  </header>
+
+  <!-- WEEK BAR -->
+  <section class="week-bar">
+    <div class="month-year" id="monthYear"></div>
+
+    <div class="week-nav">
+      <button id="prevWeek">‹</button>
+      <span id="weekLabel"></span>
+      <button id="nextWeek">›</button>
+    </div>
+  </section>
+
+  <!-- WEEK GRID -->
+  <main class="week-grid" id="weekGrid">
+    <!-- JS injects days -->
+  </main>
+
+  <script src="script.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
