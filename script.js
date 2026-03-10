@@ -1,8 +1,8 @@
 const weekGrid = document.getElementById("weekGrid");
 const monthYear = document.getElementById("monthYear");
 const weekLabel = document.getElementById("weekLabel");
-const STORAGE_PREFIX = "weekly-log";
-const WEEK_TITLE_PREFIX = "weekly-log-title";
+const STORAGE_PREFIX = "fullmoon.pocketplanner.weeklog";
+const WEEK_TITLE_PREFIX = "fullmoon.pocketplanner.weeklog.title";
 const weekTitleEl = document.getElementById("weekTitle");
 
 
