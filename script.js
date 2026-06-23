@@ -1,12 +1,24 @@
 const weekGrid = document.getElementById("weekGrid");
 const monthYear = document.getElementById("monthYear");
 const weekLabel = document.getElementById("weekLabel");
-const STORAGE_PREFIX = "fullmoon.pocketplanner.weeklog";
+const STORAGE_KEY = "fullmoon.pocketplanner.weeklog";
+
+function loadData() {
+  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+}
+
+function saveData(data) {
+  data.updatedAt = Date.now();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+
+  // Dashboard sync flag
+  localStorage.setItem("fullmoon.pocketplanner.sync.changed", Date.now());
+}
 
 function getStorageKey(date, weekday) {
   const year = date.getFullYear();
   const week = getISOWeekNumber(date);
-  return `${STORAGE_PREFIX}-${year}-W${week}-${weekday}`;
+  return `${year}-W${week}-${weekday}`;
 }
 
 let currentDate = new Date();
@@ -29,20 +41,21 @@ function renderWeek() {
     year: "numeric",
   });
 
-const end = new Date(start);
-end.setDate(start.getDate() + 6);
+  const end = new Date(start);
+  end.setDate(start.getDate() + 6);
 
-const startMonth = start.toLocaleDateString("en-US", {
-  month: "short"
-});
+  const startMonth = start.toLocaleDateString("en-US", {
+    month: "short",
+  });
 
-const endMonth = end.toLocaleDateString("en-US", {
-  month: "short"
-});
+  const endMonth = end.toLocaleDateString("en-US", {
+    month: "short",
+  });
 
-weekLabel.textContent =
-  `${startMonth} ${start.getDate()} - ${endMonth} ${end.getDate()}`;
+  weekLabel.textContent = `${startMonth} ${start.getDate()} - ${endMonth} ${end.getDate()}`;
   const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
+
+  const plannerData = loadData();
 
   days.forEach((label, i) => {
     const date = new Date(start);
@@ -54,7 +67,7 @@ weekLabel.textContent =
     row.className = "day" + (isToday ? " today" : "");
 
     const storageKey = getStorageKey(date, label);
-    const savedText = localStorage.getItem(storageKey) || "";
+    const savedText = plannerData[storageKey] || "";
 
     const textarea = document.createElement("textarea");
     textarea.className = "day-content";
@@ -63,7 +76,9 @@ weekLabel.textContent =
 
     // ✅ SAVE ON INPUT
     textarea.addEventListener("input", () => {
-      localStorage.setItem(storageKey, textarea.value);
+      const data = loadData();
+      data[storageKey] = textarea.value;
+      saveData(data);
     });
 
     row.innerHTML = `
@@ -107,7 +122,5 @@ document.getElementById("nextWeek").onclick = () => {
   currentDate.setDate(currentDate.getDate() + 7);
   renderWeek();
 };
-
-
 
 renderWeek();
