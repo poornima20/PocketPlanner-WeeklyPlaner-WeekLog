@@ -16,32 +16,20 @@
 <body>
 
   <!-- HEADER -->
-  <header class="header">
-    <h1
-  id="weekTitle"
-  class="week-title"
-  contenteditable="true"
-  spellcheck="false"
->
-  Week Log
-</h1>
+<header class="header">
 
-    <button id="todayBtn" class="today-btn" aria-label="Go to today">
-  <i data-lucide="calendar-days"></i>
-</button>
+  <div class="month-year" id="monthYear"></div>
 
-  </header>
+  <div class="week-nav">
+    <button id="prevWeek">‹</button>
 
-  <!-- WEEK BAR -->
-  <section class="week-bar">
-    <div class="month-year" id="monthYear"></div>
+    <span id="weekLabel" class="week-range"></span>
 
-    <div class="week-nav">
-      <button id="prevWeek">‹</button>
-      <span id="weekLabel"></span>
-      <button id="nextWeek">›</button>
-    </div>
-  </section>
+    <button id="nextWeek">›</button>
+  </div>
+
+</header>
+
 
   <!-- WEEK GRID -->
   <main class="week-grid" id="weekGrid">
