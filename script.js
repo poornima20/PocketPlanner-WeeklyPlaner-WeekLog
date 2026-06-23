@@ -4,11 +4,12 @@ const weekLabel = document.getElementById("weekLabel");
 const STORAGE_KEY = "fullmoon.pocketplanner.weeklog";
 
 function loadData() {
-  try {
-    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
-  } catch {
-    return {};
-  }
+  return (
+    JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
+      data: {},
+      updatedAt: 0,
+    }
+  );
 }
 
 function saveData(data) {
@@ -57,6 +58,7 @@ function renderWeek() {
   const days = ["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"];
 
   const plannerData = loadData();
+  const saved = plannerData.data || {};
 
   days.forEach((label, i) => {
     const date = new Date(start);
@@ -68,7 +70,7 @@ function renderWeek() {
     row.className = "day" + (isToday ? " today" : "");
 
     const storageKey = getStorageKey(date, label);
-    const savedText = plannerData[storageKey] || "";
+    const savedText = saved[storageKey] || "";
 
     const textarea = document.createElement("textarea");
     textarea.className = "day-content";
@@ -77,9 +79,17 @@ function renderWeek() {
 
     // ✅ SAVE ON INPUT
     textarea.addEventListener("input", () => {
-      const data = loadData();
-      data[storageKey] = textarea.value;
-      saveData(data);
+      saved[storageKey] = textarea.value;
+
+      localStorage.setItem(
+        STORAGE_KEY,
+        JSON.stringify({
+          data: saved,
+          updatedAt: Date.now(),
+        }),
+      );
+
+      notifyDashboardSync();
     });
 
     row.innerHTML = `
@@ -123,5 +133,17 @@ document.getElementById("nextWeek").onclick = () => {
   currentDate.setDate(currentDate.getDate() + 7);
   renderWeek();
 };
+
+function notifyDashboardSync() {
+  if (window.parent !== window) {
+    window.parent.postMessage(
+      {
+        type: "plannerChanged",
+        planner: STORAGE_KEY,
+      },
+      "*"
+    );
+  }
+}
 
 renderWeek();
