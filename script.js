@@ -4,15 +4,16 @@ const weekLabel = document.getElementById("weekLabel");
 const STORAGE_KEY = "fullmoon.pocketplanner.weeklog";
 
 function loadData() {
-  return JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  try {
+    return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+  } catch {
+    return {};
+  }
 }
 
 function saveData(data) {
   data.updatedAt = Date.now();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-
-  // Dashboard sync flag
-  localStorage.setItem("fullmoon.pocketplanner.sync.changed", Date.now());
 }
 
 function getStorageKey(date, weekday) {
